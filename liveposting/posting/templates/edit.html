@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Species</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(circle at top, rgba(16,185,129,0.35), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,0.35), transparent 60%),
+        linear-gradient(135deg, #020617, #052e16);
+    font-family: system-ui, sans-serif;
+}
+
+.card {
+    width: 420px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 28px;
+    color: #ecfeff;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    animation: slideIn 0.8s ease forwards;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px rgba(34,197,94,0.8);
+}
+
+label {
+    font-size: 0.85rem;
+    color: #a7f3d0;
+    margin-top: 14px;
+    display: block;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    color: #ecfeff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.7);
+    background: rgba(255,255,255,0.18);
+}
+
+textarea {
+    resize: none;
+}
+
+.preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.preview img {
+    max-width: 120px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+button {
+    margin-top: 26px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #020617;
+    border: none;
+    border-radius: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+button:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(34,197,94,0.6);
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: #a7f3d0;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.back:hover {
+    text-decoration: underline;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>Edit Species</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Name</label>
+        <input type="text" name="name" value="{{ species.name }}" required>
+
+        <label>Scientific Name</label>
+        <input type="text" name="scientific_name" value="{{ species.scientific_name }}" required>
+
+        <label>Description</label>
+        <textarea name="description" rows="3" maxlength="120">{{ species.description }}</textarea>
+
+        <label>Cash Value ($)</label>
+        <input type="number" name="cash_value" value="{{ species.cash_value }}" min="0" max="1000000000" required>
+
+        <label>Change Image (optional)</label>
+        <input type="file" name="image" accept="image/*">
+
+        {% if species.image %}
+        <div class="preview">
+            <p style="font-size:0.8rem;color:#86efac;">Current Image</p>
+            <img src="{{ species.image.url }}">
+        </div>
+        {% endif %}
+
+        <button type="submit">Update Species</button>
+    </form>
+
+    <a href="{% url 'exotic' %}" class="back">← Back to Exotic List</a>
+</div>
+
+</body>
+</html>
